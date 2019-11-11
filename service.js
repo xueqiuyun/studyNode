@@ -13,6 +13,13 @@ app.get('/user/login',(req,res)=>{
     res.send('注册成功');
 })
 
+app.get('/test',(req,res)=>{
+    console.log('你好,test');
+    //接收参数
+    // let {us,ps}=req.query;
+    res.send('注册成功,test');
+})
+
 app.post('/user/reg',(req,res)=>{
     // let {us,ps}=req.body;
     console.log(req.body);
