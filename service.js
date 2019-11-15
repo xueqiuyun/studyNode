@@ -1,32 +1,39 @@
 const express=require('express');
+const db=require('./db/connect');
+const path=require('path');
 const app=express();
+//路由
+const userRouter=require('./router/userRouter');
+const foodRouter=require('./router/foodRouter');
+const fileRouter=require('./router/fileRouter');
+
 //express 实例化
 const  bodypaser=require('body-parser');
-//qpp.use  使用中间件
 //解析表单数据
 app.use(bodypaser.urlencoded({extended:false}))
-//最简单的api接口
-app.get('/user/login',(req,res)=>{
-    console.log('你好');
-    //接收参数
-    // let {us,ps}=req.query;
-    res.send('注册成功');
+app.use(bodypaser.json());
+
+app.use('/public',express.static(path.join(__dirname,'./static')));
+app.all("*",function(req,res,next){
+    //设置允许跨域的域名，*代表允许任意域名跨域
+    req.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control-Allow-Origin","*");
+    //允许的header类型
+    res.header("Access-Control-Allow-Headers","content-type");
+    //跨域允许的请求方式 
+    res.header("Access-Control-Allow-Methods","DELETE,PUT,POST,GET,OPTIONS");
+    if (req.method.toLowerCase() == 'options')
+        res.send(200);  //让options尝试请求快速结束
+    else
+        next();
 })
 
-app.get('/test',(req,res)=>{
-    console.log('你好,test');
-    //接收参数
-    // let {us,ps}=req.query;
-    res.send('注册成功,test');
-})
+app.use('/user',userRouter);
+app.use('/food',foodRouter);
+app.use('/file',fileRouter);
+// //解决跨域
 
-app.post('/user/reg',(req,res)=>{
-    // let {us,ps}=req.body;
-    console.log(req.body);
-    res.send('注册成功');
 
-})
-
-app.listen(3000,()=>{
-    console.log('server start');
+app.listen('3000',()=>{
+    console.log('service start');
 })
