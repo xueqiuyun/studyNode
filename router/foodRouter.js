@@ -3,6 +3,7 @@ const router=express.Router();
 const Mail=require('../utils/mail');
 const foodModel=require('../model/foodModel')
 router.post('/add',(req,res)=>{
+    console.log(req.body);
     let {foodName,price,desc,count,foodId}=req.body;
     foodModel.insertMany({foodName,price,desc,count,foodId})
     .then((data)=>{
